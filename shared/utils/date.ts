@@ -44,6 +44,7 @@ import { tr } from "date-fns/locale/tr";
 import { vi } from "date-fns/locale/vi";
 import { uk } from "date-fns/locale/uk";
 import { zhCN } from "date-fns/locale/zh-CN";
+import { ru } from "date-fns/locale/ru";
 import { zhTW } from "date-fns/locale/zh-TW";
 import type { DateFilter } from "../types";
 import { isBrowser } from "./browser";
@@ -328,6 +329,7 @@ const locales = {
   vi_VN: vi,
   zh_CN: zhCN,
   zh_TW: zhTW,
+  ru_RU: ru,
 };
 
 /**

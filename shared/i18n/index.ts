@@ -7,7 +7,7 @@ type LanguageOption = {
 
 // Note: Updating the available languages? Make sure to also update the
 // locales array in shared/utils/date.ts to enable translation for timestamps.
-export const languageOptions: LanguageOption[] = [
+const allLanguageOptions: LanguageOption[] = [
   {
     label: "Català (Catalan)",
     value: "ca_ES",
@@ -117,5 +117,16 @@ export const languageOptions: LanguageOption[] = [
     value: "vi_VN",
   },
 ];
+
+allLanguageOptions.push({
+  label: "Русский (Russian)",
+  value: "ru_RU",
+});
+
+const enabledLanguages = new Set<LanguageOption["value"]>(["en_US", "ru_RU"]);
+
+export const languageOptions: LanguageOption[] = allLanguageOptions.filter(
+  (option) => enabledLanguages.has(option.value)
+);
 
 export const languages = languageOptions.map((i) => i.value);
