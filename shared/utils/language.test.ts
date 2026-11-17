@@ -17,11 +17,11 @@ describe("formatNumber", () => {
 
 describe("getSupportedLanguage", () => {
   it("converts a supported BCP 47 locale", () => {
-    expect(getSupportedLanguage("pt-BR")).toEqual("pt_BR");
+    expect(getSupportedLanguage("ru-RU")).toEqual("ru_RU");
   });
 
   it("accepts a supported CLDR locale", () => {
-    expect(getSupportedLanguage("pt_BR")).toEqual("pt_BR");
+    expect(getSupportedLanguage("ru_RU")).toEqual("ru_RU");
   });
 
   it("returns the first supported locale", () => {

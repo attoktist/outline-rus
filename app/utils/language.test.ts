@@ -41,7 +41,7 @@ describe("changeLanguage", () => {
 
   beforeEach(() => {
     setSpellCheckerLanguages.mockClear();
-    i18n.addResourceBundle("de-DE", "translation", {});
+    i18n.addResourceBundle("ru-RU", "translation", {});
     Desktop.bridge = {
       setSpellCheckerLanguages,
     } as unknown as typeof Desktop.bridge;
@@ -52,15 +52,15 @@ describe("changeLanguage", () => {
   });
 
   it("should set the spellchecker when the language is unchanged", async () => {
-    await i18n.changeLanguage("de-DE");
-    await changeLanguage("de_DE", i18n);
-    expect(setSpellCheckerLanguages).toHaveBeenCalledWith(["en-US", "de-DE"]);
+    await i18n.changeLanguage("ru-RU");
+    await changeLanguage("ru_RU", i18n);
+    expect(setSpellCheckerLanguages).toHaveBeenCalledWith(["en-US", "ru-RU"]);
   });
 
   it("should keep the current language for an unsupported language", async () => {
-    await i18n.changeLanguage("de-DE");
+    await i18n.changeLanguage("ru-RU");
     await changeLanguage("ar_EG", i18n);
-    expect(i18n.languages).toEqual(["de-DE"]);
+    expect(i18n.languages).toEqual(["ru-RU"]);
     expect(setSpellCheckerLanguages).not.toHaveBeenCalled();
   });
 });

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ru } from "date-fns/locale/ru";
+import { createInstance } from "i18next";
 import { describe, expect, it } from "vitest";
 import { dateLocale } from "../utils/date";
 import { languages } from "./index";
@@ -66,19 +67,79 @@ describe("outline-rus languages", () => {
     expect(copied).toEqual([]);
   });
 
-  it("uses a distinct form for _plural keys", () => {
+  it("selects Russian plural suffixes at runtime", async () => {
     const en = readLocale("en_US");
     const translated = readLocale("ru_RU");
-    const collapsed = Object.keys(en).filter((key) => {
-      if (!key.endsWith("_plural")) {
-        return false;
-      }
-      const singularKey = key.slice(0, -"_plural".length);
-      if (!(singularKey in en) || en[singularKey] === en[key]) {
-        return false;
-      }
-      return translated[singularKey] === translated[key];
+    const instance = createInstance();
+    await instance.init({
+      compatibilityJSON: "v3",
+      lng: "ru-RU",
+      resources: { "ru-RU": { translation: translated } },
+      keySeparator: false,
+      interpolation: { escapeValue: false },
+      returnNull: false,
     });
-    expect(collapsed).toEqual([]);
+    const counts = { 1: "_0", 2: "_1", 5: "_2" } as const;
+
+    for (const key of Object.keys(en)) {
+      if (!key.endsWith("_plural")) {
+        continue;
+      }
+      const base = key.slice(0, -"_plural".length);
+      for (const [count, suffix] of Object.entries(counts)) {
+        const form = `${base}${suffix}`;
+        expect(translated[form], form).toBeTruthy();
+        expect(
+          instance.t(base, {
+            count: Number(count),
+            count2: Number(count),
+            usersCount: Number(count),
+            groupsCount: Number(count),
+            total: Number(count),
+            completed: Number(count),
+            number: Number(count),
+            releasesBehind: Number(count),
+            any: Number(count),
+          })
+        ).toBe(
+          instance.t(form, {
+            count: Number(count),
+            count2: Number(count),
+            usersCount: Number(count),
+            groupsCount: Number(count),
+            total: Number(count),
+            completed: Number(count),
+            number: Number(count),
+            releasesBehind: Number(count),
+            any: Number(count),
+          })
+        );
+      }
+    }
+  });
+
+  it("resolves Russian one, few, and many", async () => {
+    const instance = createInstance();
+    await instance.init({
+      compatibilityJSON: "v3",
+      lng: "ru-RU",
+      resources: { "ru-RU": { translation: readLocale("ru_RU") } },
+      keySeparator: false,
+      interpolation: { escapeValue: false },
+      returnNull: false,
+    });
+
+    expect(instance.t("{{ count }} comment", { count: 1 })).toBe(
+      "1 комментарий"
+    );
+    expect(instance.t("{{ count }} comment", { count: 2 })).toBe(
+      "2 комментария"
+    );
+    expect(instance.t("{{ count }} comment", { count: 5 })).toBe(
+      "5 комментариев"
+    );
+    expect(instance.t("{{ count }} comment", { count: 21 })).toBe(
+      "21 комментарий"
+    );
   });
 });

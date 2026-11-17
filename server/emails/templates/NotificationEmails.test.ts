@@ -126,13 +126,13 @@ describe("notification emails", () => {
   });
 
   it("should set the language and direction for RTL languages", async () => {
-    const user = await buildUser({ language: "he_IL" });
+    const user = await buildUser();
     const actor = await buildUser({ teamId: user.teamId });
     const document = await buildDocument({ teamId: user.teamId });
 
     await new DocumentAccessRequestEmail({
       to: user.email,
-      language: user.language,
+      language: "he_IL",
       userId: user.id,
       documentId: document.id,
       actorId: actor.id,

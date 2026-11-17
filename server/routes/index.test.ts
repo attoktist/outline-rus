@@ -496,15 +496,15 @@ describe("/locales/:lng.json", () => {
   });
 
   it("should keep translated entries", async () => {
-    const res = await server.get("/locales/de_DE.json");
+    const res = await server.get("/locales/ru_RU.json");
     const body: Record<string, string> = await res.json();
-    expect(body.Saving).toEqual("Speichert");
+    expect(body.Saving).toEqual("Сохранение");
   });
 
   it("should return 304 when the ETag matches", async () => {
-    const res = await server.get("/locales/de_DE.json");
+    const res = await server.get("/locales/ru_RU.json");
     const etag = res.headers.get("etag") ?? "";
-    const cached = await server.get("/locales/de_DE.json", {
+    const cached = await server.get("/locales/ru_RU.json", {
       headers: { "If-None-Match": etag },
     });
     expect(cached.status).toEqual(304);
